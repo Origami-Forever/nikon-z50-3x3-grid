@@ -33,7 +33,11 @@ Treat the artifact as camera-tested, not universally certified.
 
 ## Distribution policy
 
-Nikon firmware, decoded modules, the legacy XOR mask and generated `.BIN`
-files are not distributed by this repository. Users must obtain the official
-package and a locally usable mask themselves, build the artifact, verify its
-SHA-256, and retain the stock updater for recovery.
+Nikon firmware, decoded modules and the legacy XOR mask are not distributed as
+source-tree files. The verified modified EG module is distributed separately
+as the `EG163060.BIN` GitHub Release asset. Users may download that file,
+verify its SHA-256, and retain the stock official updater for recovery.
+
+The release asset is firmware-derived and is not covered by the project's MIT
+License. Users remain responsible for checking compatibility and Nikon's terms
+before downloading or installing it.
