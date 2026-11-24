@@ -5,8 +5,17 @@ authorized by, endorsed by, or supported by Nikon Corporation. Nikon and Z 50
 are trademarks of their respective owners and are used only to identify the
 compatible camera.
 
-No Nikon firmware, extracted firmware asset, or modified camera update is
-included in this repository.
+The source tree contains no Nikon firmware, extracted firmware asset, or
+modified camera update. A prebuilt, modified EG module is distributed
+separately as a GitHub Release asset:
+
+- `EG163060.BIN`
+- SHA-256:
+  `241afae261d39633c7b7061a38719423980feacaf3a428996971b75fbf0ab2a1`
+
+That binary is derived from Nikon firmware and is not relicensed under this
+project's MIT License. Users remain responsible for Nikon's terms and for
+deciding whether to download or install it.
 
 The legacy Nikon XOR tables are shared across several EXPEED 6 / legacy-format
 models. The table is derived material rather than original project code. It is
