@@ -1,36 +1,52 @@
-# Nikon Z50 3x3 Framing Grid
+# 尼康 Z50 3×3 取景网格
 
-Source-relative firmware tooling for the Nikon Z 50, with a data-only 3x3
-grid patch that has been installed on one Z50 C 2.60 camera.
+[English](README.en.md) | 简体中文
 
-The first target is a single user-visible change:
+这是一个针对尼康 Z50 C 2.60 的固件研究工具。它通过数据级补丁，把原厂
+`d8 取景网格显示` 的网格线数量从 4×4 改为 3×3，不注入代码，也不修改菜单。
 
-- keep the stock `d8 Framing grid display` switch;
-- when it is on, draw a 3x3 grid instead of the stock fixed grid;
-- leave all other factory behavior untouched.
+该补丁已在**一台** Z50 C 2.60 上完成安装，机主反馈安装后相机可以正常
+使用。它不是面向所有相机批次或固件版本的通用认证版本。
 
-This repository intentionally does not include Nikon firmware, a modified
-camera update, a decoded module, or the legacy XOR mask. Supply your own
-unmodified official update package:
+## 功能
 
-| Camera | Firmware | File | Size | SHA-256 |
+- 保留原厂 `d8 取景网格显示` 开关；
+- 开启网格时显示 3×3；
+- 关闭网格时恢复原厂关闭行为；
+- 只修改 6 个网格模板计数和模块 CRC；
+- 不修改代码、跳转、指针、字体、菜单或传感器路径。
+
+## 不包含固件
+
+本仓库刻意不包含以下内容：
+
+- 尼康官方固件；
+- 修改后的相机更新文件或 `EG163060.BIN`；
+- 解码后的固件模块；
+- 旧版 XOR 密钥表。
+
+你需要自行取得未经修改的官方固件包：
+
+| 相机 | 固件 | 文件 | 大小 | SHA-256 |
 | --- | --- | --- | --- | --- |
 | Nikon Z 50 | C 2.60 | `Z_50_0260.bin` | 31,972,272 | `69745c9e8f3156e936918e62a4a1fad18e7078e9ea3b95d8b8e08144b1542e49` |
 
-The update package is encrypted with Nikon's legacy XOR scheme. This project
-uses the public, camera-independent legacy tables to decode it locally and
-checks both module and package CRCs before accepting the result.
+官方更新包使用尼康旧版 XOR 格式。构建工具会在本地解码并检查模块与包的
+CRC，但不会下载固件，也不会连接或刷写相机。
 
-The 768-byte legacy XOR mask is **not included in this repository** because it
-is derived material and its upstream distribution grants no license over the
-table itself. Keep your own local copy at
-`firmware/legacy_nikon_mask.hex`; that directory is ignored by Git. The format
-also accepts a JSON key from WonderLantern's `nikon-fw-key-tool` through the
-`--mask` option.
+768 字节旧版 XOR 表属于固件派生材料，因此不在仓库中提供。请自行取得合法
+可用的本地副本，放在：
 
-## Build the first candidate
+```text
+firmware/legacy_nikon_mask.hex
+```
 
-Run:
+构建工具也接受 WonderLantern `nikon-fw-key-tool` 生成的 JSON 密钥文件。
+
+## 构建
+
+要求 Python 3.10 或更高版本。仅构建数据版 3×3 时可完全不使用第三方
+Python 包。
 
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
@@ -39,14 +55,21 @@ python tools/build_grid3x3.py `
   --output-dir output/grid3x3-v3
 ```
 
-The two output files must not already exist. The builder writes:
+构建器不会覆盖已有文件。成功后会生成：
 
 ```text
 EG163060.BIN
 grid3x3-report.json
 ```
 
-Audit the exact artifact independently with:
+已知已实机安装的构建为：
+
+- 文件名：`EG163060.BIN`
+- 大小：31,404,090 字节
+- SHA-256：
+  `241afae261d39633c7b7061a38719423980feacaf3a428996971b75fbf0ab2a1`
+
+## 独立验证
 
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
@@ -56,52 +79,75 @@ python tools/verify_candidate.py `
   --candidate output/grid3x3-v3/EG163060.BIN
 ```
 
-The candidate sets both axis line counts in the stock grid-template records
-to 2 and recalculates the main-module CRC. See
-[implementation evidence](docs/IMPLEMENTATION.md).
+审计器会从官方包独立重建结果，并拒绝以下文件：
 
-## Scope
+- 与独立重建结果不一致；
+- 大小异常；
+- 缺少预期修改；
+- 存在未预期修改；
+- 模块 CRC 残留不为零。
 
-Only the data-only 3x3 patch is part of this release. Selectable-menu
-experiments are not distributed or built by the public entry points. A menu
-prototype caused an unresponsive state during hardware testing and is not
-considered safe.
+该构建只改变以下 6 个数据字段和末尾 2 字节 CRC：
 
-## Status
+| 运行地址 | 原厂值 | 3×3 |
+| --- | --- | --- |
+| `0x106627C2` | X `03 00` | `02 00` |
+| `0x106627CE` | Y `03 00` | `02 00` |
+| `0x106627E2` | X `03 00` | `02 00` |
+| `0x106627EE` | Y `03 00` | `02 00` |
+| `0x10662802` | X `03 00` | `02 00` |
+| `0x1066280E` | Y `03 00` | `02 00` |
 
-This is a narrow firmware research project, not a general-purpose Nikon
-firmware modification kit.
+实现依据见 [实现说明](docs/IMPLEMENTATION.md)。
 
-The first milestone is complete:
+## 验证范围
 
-- [x] Decode the exact stock C 2.60 package.
-- [x] Extract and fingerprint the main `eg` module.
-- [x] Locate the stock grid template used by d8.
-- [x] Change only the grid line count from the stock fixed style to 3x3.
-- [x] Rebuild and verify the modified main module.
-- [x] Complete emulator checks and report initial physical-camera installation.
+第一阶段已经完成：
 
-The repository remains source-only. Build outputs are ignored locally and are
-not published as release binaries.
+- [x] 解码官方 Z50 C 2.60 更新包；
+- [x] 提取并校验主 `eg` 模块；
+- [x] 定位 `d8` 使用的网格模板；
+- [x] 只把网格计数从原厂值 3 改为 2；
+- [x] 重建模块并独立验证完整文件；
+- [x] 在一台 Z50 C 2.60 上报告安装成功且相机正常。
 
-The artifact with SHA-256
-`241afae261d39633c7b7061a38719423980feacaf3a428996971b75fbf0ab2a1`
-was installed on one Z50 running C 2.60 and the owner reported that basic
-operation remained normal. That is not proof that every mode, display path or
-camera unit is safe. See [verified scope](docs/VERIFICATION.md).
+尚未全面验证：
 
-Do not install any intermediate or unreported build on a camera.
+- 其他 Z50 机身和固件版本；
+- LCD、EVF 在每种显示模式下的像素级位置；
+- 电影、回放、睡眠唤醒等不常见路径；
+- 更新中断后的必然恢复能力。
 
-## Safety
+因此，“已在一台相机上安装成功”不能等同于“所有 Z50 都绝对安全”。
+详细范围见 [验证记录](docs/VERIFICATION.md)。
 
-Firmware modification can damage the camera or make it unusable. Keep an
-unmodified copy of the official update package and confirm that the camera can
-still reach `SETUP MENU -> Firmware version`. The build tools never connect to
-or flash a camera. A modified update can be rejected or fail despite passing
-offline checks.
+## 可切换菜单
 
-Read the full [safety assessment](docs/SAFETY.md). This project cannot promise
-that flashing is brick-proof.
+可切换 4×4、3×3、关闭的菜单实验**不属于本公开版本**。相关实现曾在实机
+测试中导致相机无响应，因此不提供构建入口，也不建议安装或传播。
 
-Nikon is not affiliated with or endorsing this project.
+本公开版本只有数据级 3×3 补丁。
 
+## 安全说明
+
+修改固件可能导致相机无法使用。即使文件通过离线审计，也可能被相机拒绝，
+或在特定显示路径中出现未预期行为。
+
+安装前至少确认：
+
+- `设置菜单 -> 固件版本` 显示 **C 2.60**；
+- 文件 SHA-256 与上述值完全一致；
+- 保留未经修改的 `Z_50_0260.bin` 用于回退；
+- 使用满电、健康的电池；
+- 使用相机格式化过的存储卡；
+- 更新过程中不按键、不拔卡、不断电。
+
+仓库不会提供“绝对不会变砖”的保证。完整风险评估见
+[安全评估](docs/SAFETY.md)。
+
+## 许可证
+
+本项目的自有代码和文档使用 MIT 许可证。该许可证不适用于尼康固件、
+固件派生密钥或其他第三方材料，详见 [NOTICE.md](NOTICE.md)。
+
+本项目与尼康公司无关联，也未获得尼康授权或背书。
