@@ -14,15 +14,41 @@ English | [简体中文](README.md)
 Source-relative firmware tooling for the Nikon Z 50, with a data-only 3x3
 grid patch that has been installed on one Z50 C 2.60 camera.
 
+## Direct download
+
+Build the patch locally, or download the prebuilt module:
+
+- [GitHub Release](https://github.com/Origami-Forever/nikon-z50-grid/releases/tag/v0.1.0-z50-c260-3x3)
+- [Download `EG163060.BIN`](https://github.com/Origami-Forever/nikon-z50-grid/releases/download/v0.1.0-z50-c260-3x3/EG163060.BIN)
+
+File details:
+
+- Camera: Nikon Z 50
+- Required firmware: C 2.60
+- Size: 31,404,090 bytes
+- SHA-256:
+  `241afae261d39633c7b7061a38719423980feacaf3a428996971b75fbf0ab2a1`
+
+Installation:
+
+1. Confirm `SETUP MENU -> Firmware version` shows **C 2.60**.
+2. Verify the downloaded file's size and SHA-256.
+3. Put `EG163060.BIN` in the root of a camera-formatted card.
+4. Use a fully charged battery, power the camera off, and insert the card.
+5. Turn the camera on and follow `SETUP MENU -> Firmware version`.
+6. Do not press buttons, remove the card, or disconnect power during the update.
+
 The first target is a single user-visible change:
 
 - keep the stock `d8 Framing grid display` switch;
 - when it is on, draw a 3x3 grid instead of the stock fixed grid;
 - leave all other factory behavior untouched.
 
-This repository intentionally does not include Nikon firmware, a modified
-camera update, a decoded module, or the legacy XOR mask. Supply your own
-unmodified official update package:
+The source tree intentionally does not include Nikon firmware, a decoded
+module, or the legacy XOR mask. The verified modified EG module is distributed
+separately as a GitHub Release asset because it is not source code.
+
+Supply your own unmodified official update package when building:
 
 | Camera | Firmware | File | Size | SHA-256 |
 | --- | --- | --- | --- | --- |
