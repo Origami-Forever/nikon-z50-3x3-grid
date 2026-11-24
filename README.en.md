@@ -2,6 +2,15 @@
 
 English | [简体中文](README.md)
 
+> [!CAUTION]
+> **Firmware modification can leave the camera unable to boot, unresponsive,
+> without saved settings, or outside warranty coverage.** This is not Nikon
+> software, and no modified-firmware update can be guaranteed brick-proof.
+> Hardware evidence is currently limited to one Z50 C 2.60 unit. Do not flash
+> without a fully charged battery, the official rollback package, and a clear
+> understanding of the risk. An interrupted update, wrong model, or wrong
+> firmware version may cause an unrecoverable failure.
+
 Source-relative firmware tooling for the Nikon Z 50, with a data-only 3x3
 grid patch that has been installed on one Z50 C 2.60 camera.
 
@@ -104,6 +113,23 @@ offline checks.
 
 Read the full [safety assessment](docs/SAFETY.md). This project cannot promise
 that flashing is brick-proof.
+
+## References and acknowledgements
+
+This research project acknowledges
+[WonderLantern](https://github.com/WonderLantern) and its contributors:
+
+- [wonder-lantern-z5](https://github.com/WonderLantern/wonder-lantern-z5):
+  grid-count fields, the 3x3 value, and public verification records;
+- [wonder-lantern-z30](https://github.com/WonderLantern/wonder-lantern-z30):
+  EG-module build, CRC/target validation, and risk-control practices;
+- [nikon-fw-key-tool](https://github.com/WonderLantern/nikon-fw-key-tool):
+  legacy XOR-table research and JSON key interoperability.
+
+This repository does not include those projects' firmware, recovered key
+tables, or complete source code. See
+[references and acknowledgements](ACKNOWLEDGEMENTS.md) for attribution and
+license boundaries.
 
 Nikon is not affiliated with or endorsing this project.
 
