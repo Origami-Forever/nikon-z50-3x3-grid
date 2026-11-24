@@ -2,6 +2,13 @@
 
 [English](README.en.md) | 简体中文
 
+> [!CAUTION]
+> **刷机有风险，可能导致相机无法开机、无响应、设置丢失或失去保修。**
+> 本项目不是 Nikon 官方软件，无法保证修改固件绝对不会变砖。当前只有一台
+> Z50 C 2.60 的安装成功记录。如果你没有满电电池、官方回退固件和可接受
+> 风险，请不要刷机。更新中断、错误型号或错误固件版本都可能造成不可恢复的
+> 故障。
+
 这是一个针对尼康 Z50 C 2.60 的固件研究工具。它通过数据级补丁，把原厂
 `d8 取景网格显示` 的网格线数量从 4×4 改为 3×3，不注入代码，也不修改菜单。
 
@@ -149,5 +156,20 @@ python tools/verify_candidate.py `
 
 本项目的自有代码和文档使用 MIT 许可证。该许可证不适用于尼康固件、
 固件派生密钥或其他第三方材料，详见 [NOTICE.md](NOTICE.md)。
+
+## 参考作者与项目
+
+本项目的研究参考了 [WonderLantern 组织](https://github.com/WonderLantern)
+及其贡献者公开的项目：
+
+- [wonder-lantern-z5](https://github.com/WonderLantern/wonder-lantern-z5)：
+  网格计数字段、3×3 模式取值和公开验证记录；
+- [wonder-lantern-z30](https://github.com/WonderLantern/wonder-lantern-z30)：
+  EG 模块构建、CRC/目标校验和风险控制方法；
+- [nikon-fw-key-tool](https://github.com/WonderLantern/nikon-fw-key-tool)：
+  旧版固件 XOR 密钥研究及 JSON 密钥兼容性。
+
+本项目未包含上述项目的固件、密钥表或完整源码。详细归属和许可证边界见
+[参考作者与项目](ACKNOWLEDGEMENTS.md)。
 
 本项目与尼康公司无关联，也未获得尼康授权或背书。
