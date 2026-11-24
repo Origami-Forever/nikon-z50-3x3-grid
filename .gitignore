@@ -1,0 +1,33 @@
+# User-supplied Nikon firmware and firmware-derived output.
+firmware/
+decoded/
+output/
+*.bin
+*.BIN
+*.dec
+*.DEC
+*.bi
+*.BI
+
+# Local editor and OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.tools/
+
+# Reference repositories downloaded during research.
+reference-*/
+wonder-lantern-z30-main/
+wonder-lantern-z30-main.zip
+
+# Locally retained menu experiments that failed physical-camera testing.
+docs/MENU.md
+src/z50_grid/menu_switch.py
+tests/test_menu_switch.py
+tools/build_grid_menu.py
+tools/verify_menu_candidate.py
+

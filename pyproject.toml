@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nikon-z50-grid"
+version = "0.1.0"
+description = "Experimental Nikon Z50 framing-grid firmware research tools"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+verify = ["unicorn>=2.1.4"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
