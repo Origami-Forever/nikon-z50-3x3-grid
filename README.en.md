@@ -134,16 +134,13 @@ Phase one is complete:
 - [x] Located the grid templates used by `d8`;
 - [x] Changed only the grid counters from the stock value 3 to 2;
 - [x] Rebuilt the module and independently verified the whole file;
-- [x] Reported a successful install and a normally functioning camera on one Z50 C 2.60.
 
 Not yet fully verified:
 
-- Other Z50 bodies and firmware versions;
 - Pixel-level positioning of the LCD and EVF in every display mode;
 - Uncommon paths such as movie recording, playback, and wake from sleep;
 - Guaranteed recovery after an interrupted update.
 
-So "installed successfully on one camera" does not mean "safe on every Z50".
 
 See [verification records](docs/VERIFICATION.md) for the full scope.
 
